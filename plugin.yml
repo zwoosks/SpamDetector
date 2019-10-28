@@ -1,0 +1,15 @@
+name: SpamDetector
+main: me.zwoosks.spamDetector.Main
+version: 1.0
+commands:
+   author:
+      description: Author of the plugin.
+      usage: /<command>
+   lookup:
+      description: See if a player is banned and if said alert words if logger is activated.
+      usage: /<command>
+      aliases: [checkplayer]
+   antispam-unban:
+      description: Unban a player punished by the antispam.
+      usage: /<command>
+      aliases: [au,a-unban,as-unban]

@@ -1,0 +1,306 @@
+###########################################################
+#                 SpamDetector by Zwoosks                 #
+#  Do not edit this plugin, decompile or redistribute it  #
+###########################################################
+
+# ANTISPAM PERMISSIONS:
+# antispam.unban
+# antispam.lookup
+# antispam.bypass.ban.(see below)
+#     bypass.x options: anvil, book, chat, sign, command, booktitle (if do you want to give all node perms, you'll only have to give "antispam.bypass.ban.*"
+# antispam.bypass.alert.(see below)
+#     the same as antispam.bypass.ban
+# antispam.notify.banned.(See below)
+#     banned.x options: anvil, book, chat, sign, booktitle, command (if do you want to give all node perms, you'll only have to give "antispam.notify.banned.*"
+# antispam.notify.alert.(see below)
+#     the same as antispam.notify.banned
+
+# VERY IMPORTANT INFORMATION:
+# This plugin will only consider albhabetic chars (abcde... ñ, ç, etc) and numbers (spaces not included)
+# Due to this, please, if for example you want to block serv.nu word, you'll have to block servnu
+# If you want to block for example çpço block coco and the same for the other non-English chars (ñaña = nana, íe = ie, etc)
+# By this way, people won't bypass the antispam replacing dots by other chars
+
+################# MESSAGES SECTION #################
+#    Configure general messages in this section    #
+####################################################
+beenBannedMessage: "&c&lYou've been banned by the antispam!"
+banMessageNotifier: "&d&lSpamDetector >> &e%player% &2has been banned by the antispam."
+# Lookup messages placeholders: all of them include %player% (the executor of the command). If there's an extra placeholder it's already put in the default message.
+lookupNoPremission: "&cDear %player%, you don't have access to perform this command! (Needed perm: antispam.lookup)"
+lookupYoureNotPlayer: "&c&lI'm sorry, but this command can only be executed if you're a player!"
+lookupIncorrectUsageOnlineBan: "&c%player%, this is the correct usage for the ban module: &e/lookup ban <playername or UUID>"
+lookupIncorrectNameOrUUID: "&c%player%, enter a valid nickname or UUID!"
+lookupOnlineIsBanned: "&2The player %target% from the UUID %uuid% is currently &c&lbanned&2!"
+lookupOnlineIsNotBanned: "&2The player %target% from the UUID %uuid% is currently &a&lnot banned&2!"
+lookupOfflineIsBanned: "&2The player %target% is currently &c&lbanned&2!"
+lookupOfflineIsNotBanned: "&2The player %target% is currently &a&lnot banned&2!"
+lookupIncorrectUsage: "&cIncorrect lookup usage: /lookup <module>\n&2Modules: &eban"
+lookupPlayerIsBanned: "&2The player %target% is currently &c&lbanned&2!"
+lookupPlayerIsNotBanned: "&2The player %target% is currently &a&lnot banned&2!"
+lookupOfflineNoUUID: "&c%player%, in offline mode only nicknames are accepted!"
+lookupIncorrectUsageOfflineBan: "&c%player%, this is the correct usage for the ban module: &e/lookup ban <playername>"
+lookupBanIllegalWord: "&eIllegal word: &c%word%"
+lookupBanIllegalText: "&eIllegal text: &c%text%"
+lookupBanWhereDidHeWrite: "&ePlace: &c%place%"
+# The player with that UUID doesn't need to be registered due to
+# the plugin searches it in the Mojang API and the same for the playername
+# IT WILL ONLY HAPPEN WITH ONLINE MODE SERVERS
+lookupNoUUIDregistered: "&cThere isn't any player registered with the UUID %uuid% in Minecraft!"
+lookupNoUsernameRegistered: "&cThere isn't any player registered with the name %target% in Minecraft!"
+# Unban messages. Placeholders: %player% = the executor of the command. If there's an extra placeholder it'll be used in default messages
+unbanYoureNotPlayer: "&c&lI'm sorry, but this command can only be executed if you're a player!"
+unbanNoPermission: "&cDear %player%, you don't have access to perform this command! (Needed perm: antispam.unban)"
+unbanCorrectUsage: "&c%player%, this is the correct usage for the unban command: &e/unban <playername or UUID>"
+unbanOfflineModeNoUuidAccepted: "%player%, in offline mode UUIDs are not accepted!"
+unbanInvalidUsername: "%player%, this isn't a valid username!"
+unbanPlayerIsNotBanned: "%player%, the player %target% isn't banned!"
+unbanSuccesfully: "You successfully unbanned %target%!"
+unbanSomethingWentWrong: "Something went wrong while trying to remove the player from ban databases. Please, contact with an administrator."
+unbanNoUuidRegistered: "&cThere isn't any player registered with the UUID %uuid% in Minecraft!"
+unbanOnlinePlayerIsNotBanned: "%player%, the player %target% from the UUID %uuid% is not banned!"
+unbanOnlineUnbanned: "&cYou successfully unbanned the player %target% from the UUID %uuid%!"
+unbanIncorrectNameOrUuid: "&c%player%, enter a valid nickname or UUID!"
+unbanNoUsernameRegistered: "&cThere isn't any player registered with the nick %target% in Minecraft!"
+unbanOnlineSuccessfully: "&aYou successfully unbanned the player %target% from the %uuid% UUID!"
+
+################# PLACEHOLDERS INFORMATION #################
+# placeholders for reasonBanMessage, notifyBanMessage and dispatchedCommand:
+# %player% = banned player
+# %illegalWord% = blocked word
+# %illegalText% = text that contains the illegal word
+# for alert commands: %object% = where did the player write the blacklisted word
+
+#################### ANVIL ####################
+#                CONFIGURATION                #
+###############################################
+checkAnvilsBan: true
+anvil:
+    ban:
+        active: true
+        bannedWords:
+            - anviltest
+            - etc
+        cancelEventOnPlayerBan: true
+        banPlayer: true
+        runCommand: true
+        dispatchedCommand: "say Bye bye, %player%!"
+        reasonBanMessage: "&c&lReason: &2You wrote &e%illegalWord%&2 in &e%illegalText%&2 on an anvil.\n&eYou can appeal your ban in https://www.example.com/appeal/"
+        banNotifier:
+            notify: true
+            notifyMessage: "&c&lReason: &2Detected &e%illegalWord%&2 in &e%illegalText%&2 in an anvil."
+    alert:
+        active: true
+        alertWords:
+            - justatest
+            - etc
+        cancelEventOnAlert: true
+        runCommand: true
+        dispatchedCommand: "say hello, this is a test %player% for anvil alerts"
+        saveInLog: true
+        messages:
+            player:
+                notifyPlayer: true
+                message: "&2Hello. Because you put &e%illegalWord%&2 in &e%illegalText%&2 on an anvil, your rename has been cancelled."
+            staff:
+                notifyStaff: true
+                message: "&d&lAntiSpam >>&r &2%player% has put &e%illegalWord%&2 in &e%illegalText%&2 on an anvil."
+
+#################### BOOKS ####################
+#                CONFIGURATION                #
+###############################################
+# checkBooksBan includes book titles
+checkBooksBan: true
+books:
+    ban:
+        active: true
+        bannedWords:
+            - booktest
+            - etc
+        cancelEventOnPlayerBan: true
+        banPlayer: true
+        runCommand: true
+        dispatchedCommand: "say Bye bye, %player%!, this is a book test"
+        reasonBanMessage: "&c&lReason: &2You wrote &e%illegalWord%&2 in &e%illegalText%&2 on a book.\n&eYou can appeal your ban in https://www.example.com/appeal/"
+        banNotifier:
+            notify: true
+            notifyMessage: "&c&lReason: &2Detected &e%illegalWord%&2 in &e%illegalText%&2 on a book."
+    alert:
+        active: true
+        alertWords:
+            - cacaculo
+            - etc
+        cancelEventOnAlert: true
+        runCommand: true
+        dispatchedCommand: "say hello, this is a test %player% of a book"
+        saveInLog: true
+        messages:
+            player:
+                notifyPlayer: true
+                message: "&2Hello. Because you put &e%illegalWord%&2 in &e%illegalText%&2 on a book, your text has been removed."
+            staff:
+                notifyStaff: true
+                message: "&d&lAntiSpam >>&r &2%player% has put &e%illegalWord%&2 in &e%illegalText%&2 on a book."
+
+################# BOOK TITLES #################
+#                CONFIGURATION                #
+###############################################
+booktitles:
+    ban:
+        active: true
+        bannedWords:
+            - patricio
+            - etc
+        cancelEventOnPlayerBan: true
+        banPlayer: true
+        runCommand: true
+        dispatchedCommand: "say Bye bye, %player%!, this is a book test"
+        reasonBanMessage: "&c&lReason: &2You wrote &e%illegalWord%&2 in &e%illegalText%&2 on a book title.\n&eYou can appeal your ban in https://www.example.com/appeal/"
+        banNotifier:
+            notify: true
+            notifyMessage: "&c&lReason: &2Detected &e%illegalWord%&2 in &e%illegalText%&2 on a book title."
+    alert:
+        active: true
+        alertWords:
+            - llibrexd
+            - etc
+        cancelEventOnAlert: true
+        runCommand: true
+        dispatchedCommand: "say hello, this is a test %player% of a booktitle"
+        saveInLog: true
+        messages:
+            player:
+                notifyPlayer: true
+                message: "&2Hello. Because you put &e%illegalWord%&2 in &e%illegalText%&2 on a book title, your text has been removed."
+            staff:
+                notifyStaff: true
+                message: "&d&lAntiSpam >>&r &2%player% has put &e%illegalWord%&2 in &e%illegalText%&2 on a book title."
+
+################ CHAT MESSAGES ################
+#                CONFIGURATION                #
+###############################################
+chat:
+    ban:
+        active: true
+        bannedWords:
+            - joinmyse
+            - etc
+        cancelEventOnPlayerBan: true
+        banPlayer: true
+        runCommand: true
+        dispatchedCommand: "say Bye bye, %player%!, this is a chat test"
+        reasonBanMessage: "&c&lReason: &2You wrote &e%illegalWord%&2 in &e%illegalText%&2 in the chat.\n&eYou can appeal your ban in https://www.example.com/appeal/"
+        banNotifier:
+            notify: true
+            notifyMessage: "&c&lReason: &2Detected &e%illegalWord%&2 in &e%illegalText%&2 on the chat."
+    alert:
+        active: true
+        alertWords:
+            - miserv
+            - etc
+        cancelEventOnAlert: true
+        runCommand: true
+        dispatchedCommand: "say hello, this is a test %player%"
+        saveInLog: true
+        messages:
+            player:
+                notifyPlayer: true
+                message: "&2Hello. Because you said &e%illegalWord%&2 in &e%illegalText%&2 on the chat, your message has been removed."
+            staff:
+                notifyStaff: true
+                message: "&d&lAntiSpam >>&r &2%player% has sent &e%illegalWord%&2 in &e%illegalText%&2 on the chat."
+
+#################### SIGNS ####################
+#                CONFIGURATION                #
+###############################################
+checkSignsBan: true
+signs:
+    ban:
+        active: true
+        bannedWords:
+            - universocraft
+            - etc
+        cancelEventOnPlayerBan: true
+        banPlayer: true
+        runCommand: true
+        dispatchedCommand: "say Bye bye, %player%!, this is a SIGN test"
+        reasonBanMessage: "&c&lReason: &2You wrote &e%illegalWord%&2 in &e%illegalText%&2 on a sign.\n&eYou can appeal your ban in https://www.example.com/appeal/"
+        banNotifier:
+            notify: true
+            notifyMessage: "&c&lReason: &2Detected &e%illegalWord%&2 in &e%illegalText%&2 on a sign."
+    alert:
+        active: true
+        alertWords:
+            - nothing
+            - etc
+        cancelEventOnAlert: true
+        runCommand: true
+        dispatchedCommand: "say hello, this is a test %player% for sign alerts"
+        saveInLog: true
+        messages:
+            player:
+                notifyPlayer: true
+                message: "&2Hello. Because you put &e%illegalWord%&2 in &e%illegalText%&2 on an sign, your rename has been cancelled."
+            staff:
+                notifyStaff: true
+                message: "&d&lAntiSpam >>&r &2%player% has put &e%illegalWord%&2 in &e%illegalText%&2 on an sign."
+
+################### COMMAND ###################
+#                CONFIGURATION                #
+###############################################
+# If whitlelist not enabled all commands will be checked
+# Please, add the slash (/) on commands whitelist
+checkCommandsBan: true
+commands:
+    ban:
+        active: true
+        whitlelist: true
+        whitelisted-commands:
+            - /example
+        bannedWords:
+            - servnuxd
+            - etc
+        cancelEventOnPlayerBan: true
+        banPlayer: true
+        runCommand: true
+        dispatchedCommand: "say Bye bye, %player%!, this is a COMMAND test"
+        reasonBanMessage: "&c&lReason: &2You wrote &e%illegalWord%&2 in &e%illegalText%&2 on a command.\n&eYou can appeal your ban in https://www.example.com/appeal/"
+        banNotifier:
+            notify: true
+            notifyMessage: "&c&lReason: &2Detected &e%illegalWord%&2 in &e%illegalText%&2 on a command."
+    alert:
+        active: true
+        whitlelist: true
+        whitelisted-commands:
+            - /test
+        alertWords:
+            - nothing
+            - etc
+        cancelEventOnAlert: true
+        runCommand: true
+        dispatchedCommand: "say hello, this is a test %player% for command alerts"
+        saveInLog: true
+        messages:
+            player:
+                notifyPlayer: true
+                message: "&2Hello. Because you put &e%illegalWord%&2 in &e%illegalText%&2 on a command, it has been cancelled."
+            staff:
+                notifyStaff: true
+                message: "&d&lAntiSpam >>&r &2%player% has put &e%illegalWord%&2 in &e%illegalText%&2 on a command."
+
+############## ONLINE/OFFLINE MODE ##############
+#                SPECIFY IT HERE                #
+#################################################
+# Enable for online servers, disable for offline servers.
+# IF YOUR SERVER IS IN OFFLINE MODE AND YOU ENABLE THIS OPTION, PLAYERS WILL BE ABLE TO BYPASS THE BAN CHANGING FROM LOWER TO UPPER CASE
+# AND FROM UPPER TO LOWER CASE (zwoosks -> zwooskS : the UniqueUUID won't be the same if your server is in offline mode).
+online: true
+
+############### MYSQL INFORMATION ###############
+#              MYSQL DATABASE INFO              #
+#################################################
+username: zwoosks
+password: 0607ckx
+database: antispam
+host: localhost
+port: 3306
